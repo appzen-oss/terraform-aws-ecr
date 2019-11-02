@@ -110,9 +110,14 @@ module "label" {
 }
 
 resource "aws_ecr_repository" "self" {
-  count = "${module.enabled.value}"
-  name  = "${var.use_fullname == "true" ? module.label.id : module.label.name}"
-  tags  = "${module.label.tags}"
+  count                = "${module.enabled.value}"
+  name                 = "${var.use_fullname == "true" ? module.label.id : module.label.name}"
+  image_tag_mutability = "${var.image_tag_mutability}"
+  tags                 = "${module.label.tags}"
+
+  image_scanning_configuration {
+    scan_on_push = "${var.scan_on_push}"
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "aged" {
